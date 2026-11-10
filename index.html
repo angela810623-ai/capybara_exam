@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#63c9d6" />
+    <meta name="description" content="卡皮巴拉九九乘法大冒險：適合 PC 與 iPad 的數學打地鼠遊戲。" />
+    <title>卡皮巴拉乘法大冒險</title>
+    <link rel="preload" href="assets/clay-farm-bg.png" as="image" />
+    <link rel="preload" href="assets/capybara-idle.png" as="image" />
+    <link rel="preload" href="assets/capybara-hit.png" as="image" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="app" aria-live="polite">
+      <section id="mapScreen" class="screen map-screen is-active" aria-label="關卡地圖">
+        <div class="sky-cloud cloud-one"></div>
+        <div class="sky-cloud cloud-two"></div>
+
+        <header class="map-header">
+          <div class="brand-mark" aria-hidden="true">×</div>
+          <div>
+            <p class="eyebrow">CAPYBARA MATH PARK</p>
+            <h1>卡皮巴拉<br /><span>乘法大冒險</span></h1>
+          </div>
+          <button id="soundMapBtn" class="round-button" type="button" aria-label="切換音效">🔊</button>
+        </header>
+
+        <div class="world-map" aria-label="五個關卡">
+          <div class="map-path" aria-hidden="true"></div>
+          <button class="level-node level-one is-unlocked" type="button" data-level="1">
+            <span class="level-icon carrot-house">🥕</span>
+            <span class="level-number">第 1 關</span>
+            <strong>胡蘿蔔農場</strong>
+            <span class="level-stars" id="levelOneStars">☆ ☆ ☆</span>
+          </button>
+          <button class="level-node level-two is-locked" type="button" aria-disabled="true">
+            <span class="level-icon">🍎</span><span class="level-number">第 2 關</span><strong>水果果園</strong><span>🔒</span>
+          </button>
+          <button class="level-node level-three is-locked" type="button" aria-disabled="true">
+            <span class="level-icon">♨️</span><span class="level-number">第 3 關</span><strong>溫泉廣場</strong><span>🔒</span>
+          </button>
+          <button class="level-node level-four is-locked" type="button" aria-disabled="true">
+            <span class="level-icon">🎋</span><span class="level-number">第 4 關</span><strong>竹林道場</strong><span>🔒</span>
+          </button>
+          <button class="level-node level-five is-locked" type="button" aria-disabled="true">
+            <span class="level-icon">🏮</span><span class="level-number">第 5 關</span><strong>星光祭典</strong><span>🔒</span>
+          </button>
+        </div>
+
+        <aside class="teacher-card">
+          <div class="teacher-portrait">
+            <img src="assets/capybara-idle.png" alt="卡皮老師" />
+            <span class="glasses" aria-hidden="true"></span>
+          </div>
+          <div>
+            <p>嗨！我是卡皮老師</p>
+            <strong>準備好挑戰九九乘法了嗎？</strong>
+          </div>
+          <button id="helpBtn" class="mini-button" type="button">玩法說明</button>
+        </aside>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen" aria-label="胡蘿蔔農場遊戲">
+        <div class="game-shell">
+          <header class="hud">
+            <div id="hearts" class="hud-card hearts" aria-label="生命值">❤️❤️❤️❤️❤️</div>
+            <div class="hud-card timer"><span aria-hidden="true">⏱</span><strong id="timerValue">80</strong></div>
+            <div class="question-card" aria-label="乘法題目"><span id="questionText">2 × 2 = ?</span></div>
+            <div class="hud-card progress"><span aria-hidden="true">🚩</span><strong id="progressValue">0/10</strong></div>
+            <button id="pauseBtn" class="hud-button" type="button" aria-label="暫停">Ⅱ</button>
+            <button id="soundGameBtn" class="hud-button" type="button" aria-label="切換音效">🔊</button>
+          </header>
+
+          <div id="combo" class="combo" aria-live="assertive"></div>
+          <div id="feedback" class="feedback" aria-live="assertive"></div>
+
+          <div id="holesGrid" class="holes-grid" aria-label="3乘3卡皮巴拉洞口"></div>
+
+          <div class="mission-pill"><span>🎯</span> 80 秒內答對 10 題</div>
+          <button id="exitBtn" class="exit-button" type="button">回到地圖</button>
+          <div id="hammer" class="hammer" aria-hidden="true"><i></i><b></b></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="tutorialModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" hidden>
+      <div class="modal-card tutorial-card">
+        <div class="npc-stage">
+          <img src="assets/capybara-idle.png" alt="卡皮老師" />
+          <span class="glasses large" aria-hidden="true"></span>
+        </div>
+        <div class="speech-panel">
+          <p class="eyebrow">卡皮老師的任務說明</p>
+          <h2 id="tutorialTitle">敲出正確答案！</h2>
+          <div id="tutorialContent" class="tutorial-content"></div>
+          <div class="tutorial-dots" id="tutorialDots" aria-hidden="true"></div>
+          <div class="modal-actions">
+            <button id="tutorialBackBtn" class="button button-secondary" type="button">上一步</button>
+            <button id="tutorialNextBtn" class="button button-primary" type="button">下一步</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pauseModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="pauseTitle" hidden>
+      <div class="modal-card compact-card">
+        <span class="modal-emoji">⏸️</span>
+        <h2 id="pauseTitle">先休息一下</h2>
+        <p>計時器和卡皮巴拉都暫停囉！</p>
+        <button id="resumeBtn" class="button button-primary" type="button">繼續遊戲</button>
+        <button id="pauseExitBtn" class="button button-secondary" type="button">回到地圖</button>
+      </div>
+    </div>
+
+    <div id="resultModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="resultTitle" hidden>
+      <div class="modal-card result-card">
+        <div id="resultBadge" class="result-badge">🏆</div>
+        <p class="eyebrow">胡蘿蔔農場</p>
+        <h2 id="resultTitle">挑戰成功！</h2>
+        <div id="resultStars" class="result-stars">⭐ ⭐ ⭐</div>
+        <p id="resultMessage"></p>
+        <div class="result-stats">
+          <div><span>答對</span><strong id="resultCorrect">10</strong></div>
+          <div><span>剩餘時間</span><strong id="resultTime">0 秒</strong></div>
+          <div><span>最高連擊</span><strong id="resultCombo">0</strong></div>
+        </div>
+        <div class="modal-actions">
+          <button id="resultMapBtn" class="button button-secondary" type="button">回到地圖</button>
+          <button id="retryBtn" class="button button-primary" type="button">再玩一次</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="rotateHint" class="rotate-hint" aria-hidden="true">
+      <span>↻</span><strong>橫放 iPad，遊戲更好玩！</strong>
+    </div>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
